@@ -1,10 +1,15 @@
 import { useState } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
+import {BrowserRouter as Router, Routes, Route} from 'react-router-dom'
 
-import Navbar from './Componentes/Navbar'
-import Titulo from './Componentes/Titulo'
-import Footer from './Componentes/Footer'
+import ItemListContainer from './Componentes/ItemListContainer/ItemListContainer'
+import ItemDetailContainer from './Componentes/ItemDetailContainer/ItemDetailContainer'
+import { mFetch } from './Componentes/mockFetch/mockFetch'
+import CartContainer from './Componentes/CartContainer/CartContainer'
+import ItemCount from './Componentes/ItemCount/ItemCount'
+import Navbar from './Componentes/Navbar/Navbar'
+
 import './App.css'
 import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -12,25 +17,18 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 
 
 function App() {
-  const [estado, cambiarEstado] = useState (0)
-
-  const addCount = () =>{
-    cambiarEstado(estado + 1)
-  }
 
   return(
-    <div>
-      <Navbar/>
-
-      <Titulo titulo='titulo app' subtitulo='subtitulo app'/>
-
-      <label>
-        <strong>{estado}</strong>
-        <button onClick={addCount}> +1 </button>
-      </label>
-
-      <Footer titulo='titulo de footer' subtitulo='subtitulo de footer'/>
-    </div>
+    <Router>
+        <Navbar/>
+        <Routes>
+          <Route path='/' element={<ItemListContainer/>}/>
+          <Route path='/category/:cid' element={<ItemListContainer/>}/>
+          <Route path='/detalle/:pid' element={<ItemDetailContainer/>}/>
+          <Route path='/cart' element={<CartContainer/>}/>
+        </Routes>
+        
+    </Router>
   )
 }
 

@@ -1,0 +1,11 @@
+.card{
+    width: 250px;
+    margin-top: 15px;
+    box-shadow: 0 0 6px black;
+}
+.body-card{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    
+}
