@@ -1,44 +1,46 @@
 import { useEffect, useState } from "react"
-import  {mFetch, productos } from "../mockFetch/mockFetch"
-import './ItemListContainer.css'
 import ItemList from "../ItemList/ItemList"
 import { useParams } from "react-router-dom"
+import {collection, doc, getDoc, getDocs, getFirestore, query, where} from "firebase/firestore"
+import './ItemListContainer.css'
+
 
 const ItemListContainer = () => {
     const [productos, setProducts] = useState([])
     const [loading, setLoading] = useState(true)
     const {cid} = useParams()
-    console.log(cid);
 
-    useEffect(()=>{
+    useEffect(()=> {
         if (cid) {
-            mFetch()
-            .then(respuesta => setProducts(respuesta.filter(productos => cid === productos.category)))
-            .catch(err => console.log(err))
+            const db = getFirestore()
+            const queryCollection = collection(db, 'Productos')
+            const queryFilter = query(queryCollection, where('category', '==', cid))
+            getDocs(queryFilter)
+            .then(resp => setProducts(resp.docs.map (prod => ( {id: prod.id, ...prod.data()} ) ) ) )
+            .then(resp => (resp))
+            .catch(err => (err))
             .finally(()=> setLoading(false))
-            
         } else {
-            mFetch()
-            .then(respuesta => setProducts(respuesta))
-            .catch(err => console.log(err))
+            const db = getFirestore()
+            const queryCollection = collection(db, 'Productos')
+            getDocs(queryCollection)
+            .then(resp => setProducts(resp.docs.map (prod => ( {id: prod.id, ...prod.data()} ) ) ) )
+            .then(resp => (resp))
+            .catch(err => (err))
             .finally(()=> setLoading(false))
         }
     }, [cid])
 
-    // useEffect(()=> {
-    //     const url = ''
-    //     fetch()
-    // }, [])
-
-    
-
     return (
-        <div className="body-card">
-            {loading ? <h2>Cargando...</h2> 
-                : 
-                <ItemList productos={productos}/>
-        }
-        </div>
-    )
+            <div className="body-card">
+                {loading ? <h2 className="loading">Cargando...</h2> 
+                    : 
+                    <>
+                    <ItemList productos={productos}/>
+                    </>
+                }
+            </div>
+        )
 }
 export default ItemListContainer
+

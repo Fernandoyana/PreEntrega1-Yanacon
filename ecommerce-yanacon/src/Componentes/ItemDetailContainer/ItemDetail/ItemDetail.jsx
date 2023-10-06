@@ -1,23 +1,22 @@
-import React from 'react'
-import { productos } from '../../mockFetch/mockFetch'
 import ItemCount from '../../ItemCount/ItemCount';
+import { useCartContext } from '../../../Context/CartContext';
 import './ItemDetail.css';
 
+
 const ItemDetail = ({productos}) => {
-
-    const onAdd = (counter) => {
-        console.log('Productos seleccionados:', counter);
-
+    const {addProduct} = useCartContext()
+    const onAdd = (cantidad) => {
+        addProduct({...productos, cantidad})
     }
+
     return (
         <center key={productos} className='card'>
-            <h2></h2>
             <div className='col'>
-                <img className=' img' src={productos.imageUrl} alt="imagen"/>
-                <p>{productos.name}</p>
+                <img className=' img' src={productos.imageURL} alt="imagen"/>
+                <p><b>{productos.name}</b></p>
+                <p>{productos.description}</p>
                 <p><b>${productos.price}</b></p>
             </div>
-
             <div className='row'>
                 <ItemCount initial={1} stock={productos.stock} onAdd={onAdd}/>
             </div>
